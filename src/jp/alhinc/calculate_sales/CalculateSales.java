@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CalculateSales {
@@ -37,6 +38,24 @@ public class CalculateSales {
 		}
 
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
+		
+		// listFilesを使用してfilesという配列に、
+		// 指定したパスに存在する全てのファイル（または、ディレクトリ）の情報を格納します。
+		File[] files = new File(‪C:\Users\trainee1207\Desktop\売上集計課題).listFiles();
+		
+		// 先にファイルの情報を格納するList(ArrayList)を宣言します。
+		List<File> rcdFiles = new ArrayList<>();
+		
+		// filesの数だけ繰り返すことで、 
+		// 指定したパスに存在する全てのファイル(または、ディレクトリ)の数だけ繰り返されます
+		for(int i = 0; i < files.length ; i++) {
+			//matches を使⽤してファイル名が「数字8桁.rcd」なのか判定します。
+			files[i].getName();
+			if(i.matches[0-9]) {
+				//売上ファイルの条件に当てはまったものだけ、List(ArrayList) に追加します。
+				rcdFiles.add(files[i]);
+			}
+		}
 
 
 
@@ -73,8 +92,8 @@ public class CalculateSales {
 				String[]items = line.split(",");
 
 				//Map に追加する2つの情報をputの引数として指定します。
-				branchNames.put(支店コード, 支店名);
-				branchSales.put(支店コード, 0円);
+				branchNames.put(items[0], items[1]);
+				branchSales.put(items[0], 0L);
 			}
 
 		} catch(IOException e) {
