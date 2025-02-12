@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class CalculateSales {
 		
 		// listFilesを使用してfilesという配列に、
 		// 指定したパスに存在する全てのファイル（または、ディレクトリ）の情報を格納します。
-		File[] files = new File(‪C:\Users\trainee1207\Desktop\売上集計課題).listFiles();
+		File[] files = new File(‪args[0]).listFiles();
 		
 		// 先にファイルの情報を格納するList(ArrayList)を宣言します。
 		List<File> rcdFiles = new ArrayList<>();
@@ -51,11 +52,38 @@ public class CalculateSales {
 		for(int i = 0; i < files.length ; i++) {
 			//matches を使⽤してファイル名が「数字8桁.rcd」なのか判定します。
 			files[i].getName();
-			if(i.matches[0-9]) {
+			if(files[i].getName().matches("[0-9]{8}.+rcd$")) {
 				//売上ファイルの条件に当てはまったものだけ、List(ArrayList) に追加します。
 				rcdFiles.add(files[i]);
 			}
 		}
+BufferedReader br = null;
+			
+				try {
+					File file = new File(path, fileName);
+					FileReader fr = new FileReader(file);
+					br = new BufferedReader(fr);
+					
+					for(int i = 0; i < rcdFiles.size(); i++) {
+						// 売上ファイル読み込み処理
+						if(!readFile(args[0], files[i], branchNames, branchSales)) {
+							return;
+						
+							long fileSale = Long.parseLong(Long);
+							
+							Long saleAmount = branchSales.get(String) + long fileSale;
+							
+						}
+						
+					}
+				} catch{
+				}
+			}
+		}
+		
+		private static boolean readFile(String path, String fileName, Map<String, String> branchNames, Map<String, Long> branchSales) {
+			
+			
 
 
 
