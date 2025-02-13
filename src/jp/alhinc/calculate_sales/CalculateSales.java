@@ -1,8 +1,10 @@
 package jp.alhinc.calculate_sales;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +69,7 @@ public class CalculateSales {
 					String line;
 
 						// 先にファイルの情報を格納するList(ArrayList)を宣言します。
-					List<File> rcdInfoFiles = new ArrayList<>();
+					List<String> rcdInfoFiles = new ArrayList<>();
 
 					while((line = br.readLine()) != null) {
 
@@ -79,6 +81,9 @@ public class CalculateSales {
 					long fileSale = Long.parseLong(rcdInfoFiles.get(1));
 						//読み込んだ売上⾦額を加算します。
 					Long saleAmount = branchSales.get(rcdInfoFiles.get(0)) + fileSale;
+
+					//加算した売上⾦額をMapに追加します。
+					branchSales.put(rcdInfoFiles.get(0), saleAmount);
 
 
 
@@ -167,8 +172,15 @@ public class CalculateSales {
 			FileWriter fw = new FileWriter(file);
 			bw = new BufferedWriter(fw);
 
-			for(String key : 支店コードを入れたMap.keySet()) {
-
+			for(String key : branchNames.keySet()) {
+					//支店コード
+				bw.write(branchSales.get(rcdInfoFiles.get(0)));
+				bw.newLine();
+					//支店名
+				bw.write(branchNames.get(key));
+				bw.newLine();
+					//売上合計金額
+				bw.write(branchSales.get(saleAmount));
 			}
 		} catch(){
 
