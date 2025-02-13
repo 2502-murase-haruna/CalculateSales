@@ -39,51 +39,59 @@ public class CalculateSales {
 		}
 
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
-		
+
 		// listFilesを使用してfilesという配列に、
 		// 指定したパスに存在する全てのファイル（または、ディレクトリ）の情報を格納します。
 		File[] files = new File(‪args[0]).listFiles();
-		
+
 		// 先にファイルの情報を格納するList(ArrayList)を宣言します。
 		List<File> rcdFiles = new ArrayList<>();
-		
-		// filesの数だけ繰り返すことで、 
+
+		// filesの数だけ繰り返すことで、
 		// 指定したパスに存在する全てのファイル(または、ディレクトリ)の数だけ繰り返されます
 		for(int i = 0; i < files.length ; i++) {
+
 			//matches を使⽤してファイル名が「数字8桁.rcd」なのか判定します。
-			files[i].getName();
+			String fileName = new File(‪args[0]).getName();
 			if(files[i].getName().matches("[0-9]{8}.+rcd$")) {
 				//売上ファイルの条件に当てはまったものだけ、List(ArrayList) に追加します。
 				rcdFiles.add(files[i]);
 			}
 		}
-BufferedReader br = null;
-			
+
+		BufferedReader br = null;
+			for(int i = 0; i < rcdFiles.size(); i++) {
 				try {
-					File file = new File(path, fileName);
-					FileReader fr = new FileReader(file);
+					FileReader fr = new FileReader(rcdFiles.get(i));
 					br = new BufferedReader(fr);
-					
-					for(int i = 0; i < rcdFiles.size(); i++) {
-						// 売上ファイル読み込み処理
-						if(!readFile(args[0], files[i], branchNames, branchSales)) {
-							return;
-						
-							long fileSale = Long.parseLong(Long);
-							
-							Long saleAmount = branchSales.get(String) + long fileSale;
-							
-						}
-						
+					String line;
+
+						// 先にファイルの情報を格納するList(ArrayList)を宣言します。
+					List<File> rcdInfoFiles = new ArrayList<>();
+
+					while((line = br.readLine()) != null) {
+
+						//Map に追加する情報をputの引数として指定します。
+						rcdInfoFiles.add(line);
 					}
-				} catch{
+
+						//売上ファイルから読み込んだ売上金額を加算していくために、型の変換を行います。
+					long fileSale = Long.parseLong(rcdInfoFiles.get(1));
+						//読み込んだ売上⾦額を加算します。
+					Long saleAmount = branchSales.get(rcdInfoFiles.get(0)) + fileSale;
+
+
+
+				} catch(){
+				}finally {
+
 				}
+				return false;
 			}
-		}
-		
-		private static boolean readFile(String path, String fileName, Map<String, String> branchNames, Map<String, Long> branchSales) {
-			
-			
+	}
+
+
+
 
 
 
@@ -153,6 +161,19 @@ BufferedReader br = null;
 	 */
 	private static boolean writeFile(String path, String fileName, Map<String, String> branchNames, Map<String, Long> branchSales) {
 		// ※ここに書き込み処理を作成してください。(処理内容3-1)
+		BufferedWriter bw = null;
+		try {
+			File file = new File(path, fileName);
+			FileWriter fw = new FileWriter(file);
+			bw = new BufferedWriter(fw);
+
+			for(String key : 支店コードを入れたMap.keySet()) {
+
+			}
+		} catch(){
+
+		} finally {
+		}
 
 		return true;
 	}
