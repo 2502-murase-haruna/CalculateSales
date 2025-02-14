@@ -44,7 +44,7 @@ public class CalculateSales {
 
 		// listFilesを使用してfilesという配列に、
 		// 指定したパスに存在する全てのファイル（または、ディレクトリ）の情報を格納します。
-		File[] files = new File(‪args[0]).listFiles();
+		File[] files = new File(args[0]).listFiles();
 
 		// 先にファイルの情報を格納するList(ArrayList)を宣言します。
 		List<File> rcdFiles = new ArrayList<>();
@@ -54,7 +54,7 @@ public class CalculateSales {
 		for(int i = 0; i < files.length ; i++) {
 
 			//matches を使⽤してファイル名が「数字8桁.rcd」なのか判定します。
-			String fileName = new File(‪args[0]).getName();
+			String fileName = new File(args[0]).getName();
 			if(files[i].getName().matches("[0-9]{8}.+rcd$")) {
 				//売上ファイルの条件に当てはまったものだけ、List(ArrayList) に追加します。
 				rcdFiles.add(files[i]);
@@ -87,17 +87,23 @@ public class CalculateSales {
 
 
 
-				} catch(){
+				} catch(IOException e){
+					System.out.println(UNKNOWN_ERROR);
+					return;
 				}finally {
-
+					// ファイルを開いている場合
+					if(br != null) {
+						try {
+							// ファイルを閉じる
+							br.close();
+						} catch(IOException e) {
+							System.out.println(UNKNOWN_ERROR);
+							return;
+						}
+					}
 				}
-				return false;
+
 			}
-	}
-
-
-
-
 
 
 		// 支店別集計ファイル書き込み処理
@@ -138,7 +144,7 @@ public class CalculateSales {
 			}
 
 		} catch(IOException e) {
-			System.out.println(UNKNOWN_ERROR);
+			System.out.println(FILE_NOT_EXIST);
 			return false;
 		} finally {
 			// ファイルを開いている場合
@@ -174,17 +180,23 @@ public class CalculateSales {
 
 			for(String key : branchNames.keySet()) {
 					//支店コード
-				bw.write(branchSales.get(rcdInfoFiles.get(0)));
+				bw.write(key + "," + branchNames.get(key) + "," + branchSales.get(key));
 				bw.newLine();
-					//支店名
-				bw.write(branchNames.get(key));
-				bw.newLine();
-					//売上合計金額
-				bw.write(branchSales.get(saleAmount));
+
 			}
-		} catch(){
+		} catch(IOException e){
 
 		} finally {
+			// ファイルを開いている場合
+			if(bw != null) {
+				try {
+						// ファイルを閉じる
+					bw.close();
+				} catch(IOException e) {
+					System.out.println(UNKNOWN_ERROR);
+					return false;
+				}
+			}
 		}
 
 		return true;
