@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class CalculateSales {
 	private static final String UNKNOWN_ERROR = "予期せぬエラーが発生しました";
 	private static final String FILE_NOT_EXIST = "支店定義ファイルが存在しません";
 	private static final String FILE_INVALID_FORMAT = "支店定義ファイルのフォーマットが不正です";
+	private static final String FILE_NOT_SEQUENTIAL = "売上ファイル名が連番になっていません";
 
 	/**
 	 * メインメソッド
@@ -58,6 +60,20 @@ public class CalculateSales {
 			if(fileName.matches("^[0-9]{8}.rcd$")) {
 				//売上ファイルの条件に当てはまったものだけ、List(ArrayList) に追加します。
 				rcdFiles.add(files[i]);
+			}
+
+			Collections.sort(rcdFiles);
+			for(int i = 0; i < rcdFiles.size() - 1; i++) {
+
+				int former = Integer.parseInt(fileName.substring(0,8));
+				int latter = Integer.parseInt(fileName.substring(0,8));
+
+				if((latter - former) != 1) {
+					//2つのファイル名の数字を比較して、差が1ではなかったら、
+					//エラーメッセージをコンソールに表⽰します。
+					System.out.println(FILE_NOT_SEQUENTIAL);
+					return;
+				}
 			}
 		}
 
