@@ -123,6 +123,14 @@ public class CalculateSales {
 
 		try {
 			File file = new File(path, fileName);
+			//ファイルの存在チェック
+			if(!file.exists()) {
+				System.out.println(FILE_NOT_EXIST);
+				return false;
+			}
+
+
+
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
 
@@ -137,7 +145,14 @@ public class CalculateSales {
 				//Map に追加する2つの情報をputの引数として指定します。
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], 0L);
+
+				if((items.length != 2) || (!items[0].matches("^[0-9] {3}"))) {
+					System.out.println(FILE_INVALID_FORMAT);
+					return false;
+				}
 			}
+
+
 
 		} catch(IOException e) {
 			System.out.println(UNKNOWN_ERROR);
