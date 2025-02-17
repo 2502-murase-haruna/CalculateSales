@@ -26,8 +26,8 @@ public class CalculateSales {
 	private static final String FILE_INVALID_FORMAT = "支店定義ファイルのフォーマットが不正です";
 	private static final String FILE_NOT_SEQUENTIAL = "売上ファイル名が連番になっていません";
 	private static final String TOO_MANY_ZEROES = "合計金額が10桁を超えました";
-	private static final String THIS_FILE_INVALID_CODE = "＜該当ファイル名＞の支店コードが不正です";
-	private static final String THIS_FILE_INVALID_FORMAT = "＜該当ファイル名＞のフォーマットが不正です";
+	private static final String THIS_FILE_INVALID_CODE = "の支店コードが不正です";
+	private static final String THIS_FILE_INVALID_FORMAT = "のフォーマットが不正です";
 
 
 	/**
@@ -70,20 +70,20 @@ public class CalculateSales {
 				//売上ファイルの条件に当てはまったものだけ、List(ArrayList) に追加します。
 				rcdFiles.add(files[i]);
 			}
-			//売上ファイルを保持しているListをソートする
-			Collections.sort(rcdFiles);
-			//売上ファイルのファイル名が連番になっているか確認
-			for(int i = 0; i < rcdFiles.size() - 1; i++) {
+		}
+		//売上ファイルを保持しているListをソートする
+		Collections.sort(rcdFiles);
+		//売上ファイルのファイル名が連番になっているか確認
+		for(int j = 0; j < rcdFiles.size() - 1; j++) {
 
-				int former = Integer.parseInt(fileName.substring(0,8));
-				int latter = Integer.parseInt(fileName.substring(0,8));
-				//比較する2つのファイル名の先頭から数字の8文字を切り出し、int型に変換します。
-				if((latter - former) != 1) {
-					//2つのファイル名の数字を比較して、差が1ではなかったら、
-					//エラーメッセージをコンソールに表⽰します。
-					System.out.println(FILE_NOT_SEQUENTIAL);
-					return;
-				}
+			int former = Integer.parseInt(rcdFiles.get(j).getName().substring(0,8));
+			int latter = Integer.parseInt(rcdFiles.get(j + 1).getName().substring(0,8));
+			//比較する2つのファイル名の先頭から数字の8文字を切り出し、int型に変換します。
+			if((latter - former) != 1) {
+				//2つのファイル名の数字を比較して、差が1ではなかったら、
+				//エラーメッセージをコンソールに表⽰します。
+				System.out.println(FILE_NOT_SEQUENTIAL);
+				return;
 			}
 		}
 
@@ -100,16 +100,16 @@ public class CalculateSales {
 				while((line = br.readLine()) != null) {
 					//Map に追加する情報をputの引数として指定します。
 					rcdInfoFiles.add(line);
+				}
 
-					//売上ファイルの行数が2行ではなかった場合は、エラーメッセージをコンソールに表示します。
-					if(rcdInfoFiles.size() != 2) {
-						System.out.println(THIS_FILE_INVALID_FORMAT);
-					}
+				//売上ファイルの行数が2行ではなかった場合は、エラーメッセージをコンソールに表示します。
+				if(rcdInfoFiles.size() != 2) {
+					System.out.println(rcdFiles.get(i).getName() + THIS_FILE_INVALID_FORMAT);
 				}
 				//支店情報を保持しているMapに売上ファイルの支店コードが存在しなかった場合は、
 			    //エラーメッセージをコンソールに表示します。
-				if(!branchNames.containsKey(rcdFiles.get(0))) {
-					System.out.println(THIS_FILE_INVALID_CODE);
+				if(!branchNames.containsKey(rcdInfoFiles.get(0))) {
+					System.out.println(rcdFiles.get(i).getName() + THIS_FILE_INVALID_CODE);
 				}
 
 				//売上ファイルから読み込んだ売上金額を加算していくために、型の変換を行います。
@@ -192,7 +192,7 @@ public class CalculateSales {
 
 				//支店定義ファイルが仕様のフォーマットか確認
 				//1行に支店コードと支店名が記載されており、支店コードが数字３桁であるか
-				if((items.length != 2) || (!items[0].matches("^[0-9] {3}"))) {
+				if((items.length != 2) || (!items[0].matches("^[0-9]{3}$"))) {
 					System.out.println(FILE_INVALID_FORMAT);
 					return false;
 				}
