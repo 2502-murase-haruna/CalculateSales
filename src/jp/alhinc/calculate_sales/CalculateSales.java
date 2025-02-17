@@ -37,9 +37,10 @@ public class CalculateSales {
 	 */
 	public static void main(String[] args) {
 		//コマンドライン引数が1つ設定されていなかった場合は、
-	    //エラーメッセージをコンソールに表示します。
+		//エラーメッセージをコンソールに表示します。
 		if(args.length != 1) {
 			System.out.println(UNKNOWN_ERROR);
+			return;
 		}
 		// 支店コードと支店名を保持するMap
 		Map<String, String> branchNames = new HashMap<>();
@@ -74,10 +75,10 @@ public class CalculateSales {
 		//売上ファイルを保持しているListをソートする
 		Collections.sort(rcdFiles);
 		//売上ファイルのファイル名が連番になっているか確認
-		for(int j = 0; j < rcdFiles.size() - 1; j++) {
-
-			int former = Integer.parseInt(rcdFiles.get(j).getName().substring(0,8));
-			int latter = Integer.parseInt(rcdFiles.get(j + 1).getName().substring(0,8));
+		for(int i = 0; i < rcdFiles.size() - 1; i++) {
+			//比較する2つの売上ファイル名から先頭の数字8文字を切り出し、int型に変換
+			int former = Integer.parseInt(rcdFiles.get(i).getName().substring(0,8));
+			int latter = Integer.parseInt(rcdFiles.get(i + 1).getName().substring(0,8));
 			//比較する2つのファイル名の先頭から数字の8文字を切り出し、int型に変換します。
 			if((latter - former) != 1) {
 				//2つのファイル名の数字を比較して、差が1ではなかったら、
@@ -105,25 +106,31 @@ public class CalculateSales {
 				//売上ファイルの行数が2行ではなかった場合は、エラーメッセージをコンソールに表示します。
 				if(rcdInfoFiles.size() != 2) {
 					System.out.println(rcdFiles.get(i).getName() + THIS_FILE_INVALID_FORMAT);
+					return;
 				}
 				//支店情報を保持しているMapに売上ファイルの支店コードが存在しなかった場合は、
-			    //エラーメッセージをコンソールに表示します。
+				//エラーメッセージをコンソールに表示します。
 				if(!branchNames.containsKey(rcdInfoFiles.get(0))) {
 					System.out.println(rcdFiles.get(i).getName() + THIS_FILE_INVALID_CODE);
+					return;
+				}
+				//売上⾦額が数字ではなかった場合は、エラーメッセージをコンソールに表示します。
+				if(!rcdInfoFiles.get(1).matches("^[0-9]+$")) {
+					System.out.println(UNKNOWN_ERROR);
+					return;
 				}
 
 				//売上ファイルから読み込んだ売上金額を加算していくために、型の変換を行います。
 				long fileSale = Long.parseLong(rcdInfoFiles.get(1));
-				//売上⾦額が数字ではなかった場合は、エラーメッセージをコンソールに表示します。
-				if(!rcdInfoFiles.get(1).matches("^[0-9]*$")) {
-					System.out.println(UNKNOWN_ERROR);
-				}
 				//読み込んだ売上⾦額を加算します。
 				Long saleAmount = branchSales.get(rcdInfoFiles.get(0)) + fileSale;
+
 				//売上⾦額が11桁以上の場合、エラーメッセージをコンソールに表示します。
 				if(saleAmount >= 10000000000L) {
 					System.out.println(TOO_MANY_ZEROES);
+					return;
 				}
+
 				//加算した売上⾦額をMapに追加します。
 				branchSales.put(rcdInfoFiles.get(0), saleAmount);
 
@@ -142,9 +149,7 @@ public class CalculateSales {
 					}
 				}
 			}
-
 		}
-
 
 		// 支店別集計ファイル書き込み処理
 		if(!writeFile(args[0], FILE_NAME_BRANCH_OUT, branchNames, branchSales)) {
@@ -173,22 +178,16 @@ public class CalculateSales {
 				return false;
 			}
 
-
-
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
-
 			String line;
 			// 一行ずつ読み込む
 			while((line = br.readLine()) != null) {
 				// ※ここの読み込み処理を変更してください。(処理内容1-2)
+
 				//splitを使って「,」（カンマ）で分割すると、
 				//items[0]には支店コード、items[1]には支店名が格納されます。
 				String[]items = line.split(",");
-
-				//Map に追加する2つの情報をputの引数として指定します。
-				branchNames.put(items[0], items[1]);
-				branchSales.put(items[0], 0L);
 
 				//支店定義ファイルが仕様のフォーマットか確認
 				//1行に支店コードと支店名が記載されており、支店コードが数字３桁であるか
@@ -196,9 +195,11 @@ public class CalculateSales {
 					System.out.println(FILE_INVALID_FORMAT);
 					return false;
 				}
+
+				//Map に追加する2つの情報をputの引数として指定します。
+				branchNames.put(items[0], items[1]);
+				branchSales.put(items[0], 0L);
 			}
-
-
 
 		} catch(IOException e) {
 			System.out.println(UNKNOWN_ERROR);
